@@ -1,8 +1,13 @@
 import functions
 import FreeSimpleGUI as sg
 import time
-sg.theme("GreenTan")
+import os
 
+if not os.path.exists("todos.txt"):
+    with open("todos.txt", 'w') as file:
+        pass
+
+sg.theme("GreenTan")
 clock= sg.Text("", key="clock")
 
 label = sg.Text("Type in a to-do")
@@ -26,7 +31,7 @@ while True:
         case 'Add':
             try:
                 todos = functions.get_todos()
-                new_todo = values["todo"]
+                new_todo = values["todo"] + '\n'
                 todos.append(new_todo)
                 functions.write_todos(todos)
                 window['todos'].update(values=todos)
@@ -37,7 +42,7 @@ while True:
         case 'Edit':
             try:
                 todo_to_edit = values["todos"][0]
-                new_todo = values["todo"] + '\n'
+                new_todo = values["todo"]
                 todos = functions.get_todos()
                 index = todos.index(todo_to_edit)
                 todos[index] = new_todo 
@@ -60,7 +65,7 @@ while True:
                 functions.write_todos(todos)
                 window['todos'].update(values=todos)
                 window["todo"].update(value="")
-            except Exception:
+            except ValueError:
                 sg.popup("Please select an item", font=("helvetica", 10))
 
 
